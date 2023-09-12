@@ -56,10 +56,9 @@ def process_data(data, conn, addr):
     if "module_name" not in data.keys() or "function_name" not in data.keys():
         report_error(conn, "Invalid arguments. Correct arguments are : module_name, function_name, parameters.")
 
-    runpy.run_path(data["module_name"], data.get("parameters"), run_name="__main__")
-
-
-    conn.sendall(b"Test")
+    functions_of_path = runpy.run_path(data["module_name"], run_name="__main__")["__all__"]
+    result_of_my_function = str(functions_of_path[data["function_name"]](data.get("parameters")))
+    conn.sendall(bytes(result_of_my_function, encoding="utf-8"))
 
 def report_error(connection : socket.socket, error : str):
     print(f"{Fore.RED}{error}")
@@ -80,7 +79,7 @@ def send_to_server():
     while True:
         if saved_socket != None:
             
-            m = {"module_name" : "sum.py", "function_name" : "sum_function", "parameters" : (1, 2)} #my parameters
+            m = {"module_name" : "sum.py", "function_name" : "sum", "parameters" : (1, 2)} #my parameters
             m2 = "AWAWA !"
             data = json.dumps(m)
 

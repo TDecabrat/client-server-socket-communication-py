@@ -1,6 +1,6 @@
 
-def sum_function(one : int, two : int) -> int :
-    return one + two
+def sum_function(*args) -> int :
+    return sum(*args)
 
 __all__ = {
     "sum" : sum_function,
